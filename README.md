@@ -41,13 +41,14 @@ Installation from source is the only currently supported format.
    In the Anaconda environment with DeepChem installed, `cd` into the `deepchem-gui` directory and execute-
     ```bash
     export FLASK_APP=deepchem-gui.py
+ 
     flask run
     ```
 2. Navigate to http://127.0.0.1:5000/ in your browser to open the application.
 
-3. Select a ligand file and a protein file using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb
+3. Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb
 
-4. Docking takes approx. 5 minutes, following which the predicted score and poses for the ligand are displayed in the browser.
+4. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein.
 
 5. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations).
 

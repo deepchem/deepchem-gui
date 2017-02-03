@@ -111,6 +111,14 @@ function matchName( name, comp ){
  * @type {PickingData}
  */
 
+/**
+ * {@link Signal}, dispatched upon generating docking results
+ * @example
+ * stage.signals.generatedResults.add( function( results ){ ... } );
+ * @event Stage#generatedResults
+ * @type {Data}
+ */
+
 
 /**
  * Stage objects are central for creating molecular scenes with NGL.
@@ -131,7 +139,9 @@ function Stage( eid, params ){
         componentRemoved: new Signal(),
 
         clicked: new Signal(),
-        hovered: new Signal()
+        hovered: new Signal(),
+
+        generatedResults: new Signal()
     };
 
     //
@@ -923,8 +933,11 @@ Stage.prototype = {
 
         this.tasks.dispose();
 
-    }
+    },
 
+    displayResults: function(results){
+        this.signals.generatedResults.dispatch(results)
+    }
 };
 
 

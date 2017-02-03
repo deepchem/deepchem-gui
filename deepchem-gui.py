@@ -39,26 +39,27 @@ def upload():
 				ligand.save(ligand_fn)
 				ligand_fns.append(ligand_fn)
 
-			# docking_result = dock(protein_fns, ligand_fns)
+			docking_result = dock(protein_fns, ligand_fns)
+			print docking_result
 
-			# for i in range(len(protein_fns)):
-			# 	for j in range(len(ligand_fns)):
-			#
-			# 		protein_fn = docking_result[i][j]["protein"]
-			# 		new_protein_fn = "data/" + protein_fn.split("/")[-1]
-			# 		copyfile(protein_fn, os.path.join("static", new_protein_fn))
-			# 		docking_result[i][j]["protein"] = url_for("static", filename=new_protein_fn)
-			#
-			# 		ligand_fn = docking_result[i][j]["ligand"]
-			# 		new_ligand_fn = "data/" + ligand_fn.split("/")[-1]
-			# 		copyfile(ligand_fn, os.path.join("static", new_ligand_fn))
-			# 		docking_result[i][j]["ligand"] = url_for("static", filename=new_ligand_fn)
+			for i in range(len(protein_fns)):
+				for j in range(len(ligand_fns)):
 
-			docking_result = [[{'protein': '/static/data/4oc0_protein.pdb', 'score': 5.4948800000000002, 'ligand': '/static/data/4oc0_ligand_docked.pdb'}]]
+					protein_fn = docking_result[i][j]["protein"]
+					new_protein_fn = "data/" + protein_fn.split("/")[-1]
+					copyfile(protein_fn, os.path.join("static", new_protein_fn))
+					docking_result[i][j]["protein"] = url_for("static", filename=new_protein_fn)
+
+					ligand_fn = docking_result[i][j]["ligand"]
+					new_ligand_fn = "data/" + ligand_fn.split("/")[-1]
+					copyfile(ligand_fn, os.path.join("static", new_ligand_fn))
+					docking_result[i][j]["ligand"] = url_for("static", filename=new_ligand_fn)
+
+			# docking_result = [[{'protein': u'/tmp/tmp4rzz4h/4o9w_protein.pdb', 'score': 5.2361399999999936, 'ligand': u'/tmp/tmp4rzz4h/4oc0_ligand_docked.pdb'}, {'protein': u'/tmp/tmp6ReEf4/4o9w_protein.pdb', 'score': 6.7314999999999969, 'ligand': u'/tmp/tmp6ReEf4/4o9w_ligand_docked.pdb'}]]
 
 			return jsonify(docking_result)
 		else:
-			return jsonify(error_msg="Invalid transfer of protein or ligand file.")
+			return jsonify(error_msg="Invalid file transfer.")
 	else:
 		raise NotImplementedError
 

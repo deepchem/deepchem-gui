@@ -265,6 +265,10 @@ NGL.StageWidget = function( stage ){
     var sidebar = new NGL.SidebarWidget( stage ).setId( "sidebar" );
     document.body.appendChild( sidebar.dom );
 
+    var resultbar = new NGL.ResultbarWidget( stage ).setId("resultbar")
+    document.body.appendChild( resultbar.dom );
+
+
     //
 
     document.body.addEventListener(
@@ -363,6 +367,7 @@ NGL.StageWidget = function( stage ){
     this.toolbar = toolbar;
     this.menubar = menubar;
     this.sidebar = sidebar;
+    this.resultbar = resultbar;
 
     return this;
 
@@ -496,6 +501,54 @@ NGL.ToolbarWidget = function( stage ){
 
 };
 
+// Resultbar
+
+NGL.ResultbarWidget = function(stage){
+
+    var container = new UI.CollapsiblePanel()
+
+    stage.signals.generatedResults.add( function (results){
+
+        container.clear()
+
+        var items = []
+        // console.log(results.length)
+        // console.log(results[0].length)
+        for(var i=0; i < results.length; i++){
+            for(var j=0; j < results[0].length; j++){
+                var protein = results[i][j]['protein'].split("/")
+                var ligand = results[i][j]['ligand'].split("/")
+                items.push([(i*results.length) + (j+1), protein[protein.length-1], ligand[ligand.length-1], results[i][j]['score']])
+            }
+        }
+
+        var loadComplex = function(event, idx){
+            stage.removeAllComponents()
+            var protein_url = "/static/data/" + items[idx][1]
+            var ligand_url = "/static/data/" + items[idx][2]
+            console.log(protein_url)
+            console.log(ligand_url)
+            stage.loadFile( protein_url, {defaultRepresentation: true} )
+            stage.loadFile( ligand_url, {defaultRepresentation: true} )
+        }
+
+        // console.log(items)
+
+        var columns = [{index:0, name:"No.", width: 50}, {index:1, name:"Protein", width: 200}, {index:2, name:"Ligand", width: 200}, {index:3, name:"Score", width: 100}]
+
+        var itemHeight = 30
+        var height = 300
+        var params = {defaultMargin: 5, onRowSelect: loadComplex}
+
+        var table = new UI.VirtualTable(items, itemHeight, height, columns, params)
+
+        container.add(table)
+
+    })
+
+    return container
+}
+
 
 // Menubar
 
@@ -507,14 +560,6 @@ NGL.MenubarWidget = function( stage, preferences ){
     container.add( new NGL.MenubarDockingWidget( stage ) );
     container.add( new NGL.MenubarSettingsWidget( stage, preferences ) );
     container.add( new NGL.MenubarHelpWidget( stage, preferences ) );
-    // container.add( new NGL.MenubarFileWidget( stage ) );
-    // container.add( new NGL.MenubarViewWidget( stage, preferences ) );
-    // if( NGL.ExampleRegistry && NGL.ExampleRegistry.count > 0 ){
-    //     container.add( new NGL.MenubarExamplesWidget( stage ) );
-    // }
-    // if( NGL.PluginRegistry && NGL.PluginRegistry.count > 0 ){
-    //     container.add( new NGL.MenubarPluginsWidget( stage ) );
-    // }
 
     container.add(
         new UI.Panel().setClass( "menu" ).setFloat( "right" ).add(
@@ -704,6 +749,7 @@ NGL.MenubarDockingWidget = function( stage ){
     function proteinUploadOnChange( e ){
         var fn = function( file, callback ){
             var ext = file.name.split('.').pop().toLowerCase();
+            console.log(file)
             if( proteinFileTypes.includes( ext ) ){
                 proteins.push(file)
             }else{
@@ -716,6 +762,7 @@ NGL.MenubarDockingWidget = function( stage ){
     function ligandUploadOnChange( e ){
         var fn = function( file, callback ){
             var ext = file.name.split('.').pop().toLowerCase();
+            console.log(file)
             if( ligandFileTypes.includes( ext ) ){
                 ligands.push(file)
             }else{
@@ -749,6 +796,8 @@ NGL.MenubarDockingWidget = function( stage ){
     }
 
     function uploadFiles(){
+        console.log(proteins)
+        console.log(ligands)
         var data = new FormData()
         for(var i=0; i < proteins.length; i++){
             data.append('proteins', proteins[i])
@@ -756,31 +805,23 @@ NGL.MenubarDockingWidget = function( stage ){
         for(var i=0; i < ligands.length; i++){
             data.append('ligands', ligands[i])
         }
-        console.log(data.get('proteins'))
-        console.log(data.get('ligands'))
         jQuery.ajax({
             url: '/upload',
             data: data,
             cache: false,
             contentType: false,
             processData: false,
-            timeout : 600000,
+            timeout : 2000000,
             type: 'POST',
             success: function(data) {
                 var docking_result = JSON.parse(JSON.stringify((data)))
                 if(docking_result.error_msg){
                     alert(docking_result.error_msg)
                 }
-                for(var i=0; i < proteins.length; i++){
-                    for(var j=0; j < ligands.length; j++){
-                        stage.loadFile( docking_result[i][j]["protein"], {
-                            defaultRepresentation: true
-                        } )
-                        stage.loadFile( docking_result[i][j]["ligand"], {
-                            defaultRepresentation: true
-                        } )
-                    }
-                }
+                stage.displayResults(docking_result)
+                proteins = []
+                ligands = []
+                return
             },
         });
     }
@@ -820,8 +861,8 @@ NGL.MenubarDockingWidget = function( stage ){
     var createDivider = UI.MenubarHelper.createDivider;
 
     var menuConfig = [
-        createOption( 'Upload protein (.pdb)', onProteinUploadOptionClick ),
-        createOption( 'Upload ligand (.sdf)', onLigandUploadOptionClick ),
+        createOption( 'Upload proteins (.pdb)', onProteinUploadOptionClick ),
+        createOption( 'Upload ligands (.sdf)', onLigandUploadOptionClick ),
         createDivider(),
         createOption( 'Dock', uploadFiles ),
     ];
@@ -1026,7 +1067,7 @@ NGL.MenubarHelpWidget = function( stage, preferences ){
     var createDivider = UI.MenubarHelper.createDivider;
 
     var menuConfig = [
-        createOption( 'Overview', onOverviewOptionClick ),
+        // createOption( 'Overview', onOverviewOptionClick ),
         createOption( 'Documentation', onDocOptionClick ),
         createDivider(),
         createOption( 'Debug on', onDebugOnClick ),
