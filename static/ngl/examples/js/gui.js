@@ -526,238 +526,6 @@ NGL.MenubarWidget = function( stage, preferences ){
 
 };
 
-
-// NGL.MenubarFileWidget = function( stage ){
-//
-//     var fileTypesOpen = NGL.ParserRegistry.names.concat( [ "ngl", "gz" ] );
-//     var dcdIndex = fileTypesOpen.indexOf( "dcd" );
-//     if( dcdIndex !== -1 ) fileTypesOpen.splice( dcdIndex, 1 );  // disallow dcd files
-//     var fileTypesImport = fileTypesOpen;
-//
-//     var files2upload = []
-//
-//     function fileInputOnChange( e ){
-//         var fn = function( file, callback ){
-//             var ext = file.name.split('.').pop().toLowerCase();
-//             if( fileTypesImport.includes( ext ) ){
-//                 stage.loadFile( file, {
-//                     defaultRepresentation: true
-//                 } ).then( function(){ callback(); } );
-//                 // stage.loadFile( file, function(o){
-//                 //     console.log("Representing file")
-//                 //     o.addRepresentation("licorice");
-//                 // } ).then( function(){ callback(); } );
-//             }else{
-//                 console.error( "unknown filetype: " + ext );
-//             }
-//         }
-//         var queue = new NGL.Queue( fn, e.target.files );
-//     }
-//
-//     function uploadFiles(files){
-//         var data = new FormData();
-//         data.append('file1', files[0])
-//         data.append('file2', files[1])
-//         jQuery.ajax({
-//             url: '/upload',
-//             data: data,
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//             timeout : 600000,
-//             type: 'POST',
-//             success: function(data) {
-//                 docking_result = JSON.parse(JSON.stringify((data)))
-//                 // stage.loadFile( docking_result.protein, {
-//                 //     defaultRepresentation: true
-//                 // } )
-//                 // stage.loadFile( docking_result.ligand, {
-//                 //     defaultRepresentation: true
-//                 // } )
-//                 stage.loadFile( docking_result.ligand, function(o){
-//                     o.addRepresentation("licorice")
-//                     o.centerView()
-//                 })
-//                 stage.loadFile( docking_result.protein, {
-//                     defaultRepresentation: true
-//                 } )
-//                 alert(docking_result.score)
-//             },
-//         });
-//     }
-//
-//     function fileUploadOnChange( e ){
-//         var fn = function( file, callback ){
-//             var ext = file.name.split('.').pop().toLowerCase();
-//             if( fileTypesImport.includes( ext ) ){
-//                 files2upload.push(file)
-//             }else{
-//                 console.error( "unknown filetype: " + ext );
-//             }
-//             if(files2upload.length == 2){
-//                 for(i=0; i<files2upload.length; i++){
-//                     console.log(files2upload[i].name)
-//                 }
-//                 uploadFiles(files2upload)
-//                 files2upload = []
-//             }
-//         }
-//         var queue = new NGL.Queue( fn, e.target.files );
-//     }
-//
-//     var fileInput = document.createElement("input");
-//     fileInput.type = "file";
-//     fileInput.multiple = true;
-//     fileInput.style.display = "none";
-//     fileInput.accept = "." + fileTypesOpen.join( ",." );
-//     fileInput.addEventListener( 'change', fileInputOnChange, false );
-//
-//     var fileUpload = document.createElement("input");
-//     fileUpload.type = "file";
-//     fileUpload.multiple = true;
-//     fileUpload.style.display = "none";
-//     fileUpload.accept = "." + fileTypesOpen.join( ",." );
-//     fileUpload.addEventListener( 'change', fileUploadOnChange, false );
-//
-//     // export image
-//
-//     var exportImageWidget = new NGL.ExportImageWidget( stage )
-//         .setDisplay( "none" )
-//         .attach();
-//
-//     // event handlers
-//
-//     function onOpenOptionClick () {
-//         fileInput.click();
-//     }
-//
-//     function onUploadOptionClick () {
-//         fileUpload.click();
-//     }
-//
-//     function onImportOptionClick(){
-//
-//         var datasource = NGL.DatasourceRegistry.listing;
-//         var dirWidget;
-//         function onListingClick( info ){
-//             var ext = info.path.split('.').pop().toLowerCase();
-//             if( fileTypesImport.includes( ext ) ){
-//                 stage.loadFile( datasource.getUrl( info.path ), {
-//                     defaultRepresentation: true
-//                 } );
-//                 dirWidget.dispose();
-//             }else{
-//                 console.error( "unknown filetype: " + ext );
-//             }
-//         }
-//
-//         dirWidget = new NGL.DirectoryListingWidget(
-//             datasource, stage, "Import file",
-//             fileTypesImport, onListingClick
-//         );
-//
-//         dirWidget
-//             .setOpacity( "0.9" )
-//             .setLeft( "50px" )
-//             .setTop( "80px" )
-//             .attach();
-//
-//     }
-//
-//     function onExportImageOptionClick () {
-//
-//         exportImageWidget
-//             .setOpacity( "0.9" )
-//             .setLeft( "50px" )
-//             .setTop( "80px" )
-//             .setDisplay( "block" );
-//
-//     }
-//
-//     function onScreenshotOptionClick () {
-//
-//         stage.makeImage( {
-//             factor: 1,
-//             antialias: true,
-//             trim: false,
-//             transparent: false
-//         } ).then( function( blob ){
-//             NGL.download( blob, "screenshot.png" );
-//         } );
-//
-//     }
-//
-//     function onPdbInputKeyDown ( e ) {
-//
-//         if( e.keyCode === 13 ){
-//             stage.loadFile( "rcsb://" + e.target.value.trim(), {
-//                 defaultRepresentation: true
-//             } );
-//             e.target.value = "";
-//         }
-//
-//     }
-//
-//     function onAsTrajectoryChange ( e ) {
-//         stage.defaultFileParams.asTrajectory = e.target.checked;
-//     }
-//
-//     function onFirstModelOnlyChange( e ){
-//         stage.defaultFileParams.firstModelOnly = e.target.checked;
-//     }
-//
-//     function onCAlphaOnlyChange( e ){
-//         stage.defaultFileParams.cAlphaOnly = e.target.checked;
-//     }
-//
-//     function onReorderAtomsChange( e ){
-//         stage.defaultFileParams.reorderAtoms = e.target.checked;
-//     }
-//
-//     function onDontAutoBondChange( e ){
-//         stage.defaultFileParams.dontAutoBond = e.target.checked;
-//     }
-//
-//     function onUseWorkerChange( e ){
-//         stage.defaultFileParams.useWorker = e.target.checked;
-//     }
-//
-//     // configure menu contents
-//
-//     var createOption = UI.MenubarHelper.createOption;
-//     var createInput = UI.MenubarHelper.createInput;
-//     var createCheckbox = UI.MenubarHelper.createCheckbox;
-//     var createDivider = UI.MenubarHelper.createDivider;
-//
-//     var menuConfig = [
-//         createOption( 'Open...', onOpenOptionClick ),
-//         createOption( 'Upload...', onUploadOptionClick ),
-//         createInput( 'PDB', onPdbInputKeyDown ),
-//         createCheckbox( 'asTrajectory', false, onAsTrajectoryChange ),
-//         createCheckbox( 'firstModelOnly', false, onFirstModelOnlyChange ),
-//         createCheckbox( 'cAlphaOnly', false, onCAlphaOnlyChange ),
-//         createCheckbox( 'reorderAtoms', false, onReorderAtomsChange ),
-//         createCheckbox( 'dontAutoBond', false, onDontAutoBondChange ),
-//         createCheckbox( 'useWorker', false, onUseWorkerChange ),
-//         createDivider(),
-//         createOption( 'Screenshot', onScreenshotOptionClick, 'camera' ),
-//         createOption( 'Export image...', onExportImageOptionClick ),
-//     ];
-//
-//     if( NGL.DatasourceRegistry.listing ){
-//         menuConfig.splice(
-//             1, 0, createOption( 'Import...', onImportOptionClick )
-//         );
-//     }
-//
-//     var optionsPanel = UI.MenubarHelper.createOptionsPanel( menuConfig );
-//     optionsPanel.dom.appendChild( fileInput );
-//
-//     return UI.MenubarHelper.createMenuContainer( 'File', optionsPanel );
-//
-// };
-//
-
 NGL.MenubarVisualizationWidget = function( stage ){
 
     var fileTypesOpen = NGL.ParserRegistry.names.concat( [ "ngl", "gz" ] );
@@ -927,49 +695,19 @@ NGL.MenubarDockingWidget = function( stage ){
     if( dcdIndex !== -1 ) fileTypesOpen.splice( dcdIndex, 1 );  // disallow dcd files
     var fileTypesImport = fileTypesOpen;
 
-    var files2upload = [null, null]
+    var proteinFileTypes = ["pdb"]
+    var ligandFileTypes = ["sdf"]
 
-    function uploadFiles(){
-        var data = new FormData();
-        data.append('protein', files2upload[0])
-        data.append('ligand', files2upload[1])
-        files2upload = [null, null]
-        jQuery.ajax({
-            url: '/upload',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            timeout : 600000,
-            type: 'POST',
-            success: function(data) {
-                docking_result = JSON.parse(JSON.stringify((data)))
-                if(docking_result.error_msg){
-                    alert(docking_result.error_msg)
-                }
-                stage.loadFile( docking_result.protein, {
-                    defaultRepresentation: true
-                } )
-                stage.loadFile( docking_result.ligand, {
-                    defaultRepresentation: true
-                } )
-                alert("Docking score: " + docking_result.score)
-            },
-        });
-    }
+    var proteins = []
+    var ligands = []
 
     function proteinUploadOnChange( e ){
         var fn = function( file, callback ){
             var ext = file.name.split('.').pop().toLowerCase();
-            if( fileTypesImport.includes( ext ) ){
-                files2upload[0]=file
+            if( proteinFileTypes.includes( ext ) ){
+                proteins.push(file)
             }else{
                 console.error( "unknown filetype: " + ext );
-            }
-            if(files2upload[0] && files2upload[1]){
-                console.log(files2upload[0].name)
-                console.log(files2upload[1].name)
-                uploadFiles()
             }
         }
         var queue = new NGL.Queue( fn, e.target.files );
@@ -978,17 +716,10 @@ NGL.MenubarDockingWidget = function( stage ){
     function ligandUploadOnChange( e ){
         var fn = function( file, callback ){
             var ext = file.name.split('.').pop().toLowerCase();
-            var valid_exts = ["sdf"]
-            if( valid_exts.includes( ext ) ){
-                files2upload[1]=file
+            if( ligandFileTypes.includes( ext ) ){
+                ligands.push(file)
             }else{
                 console.error( "unknown filetype: " + ext );
-                alert("Sorry, only .sdf ligand files are supported at this time.");
-            }
-            if(files2upload[0] && files2upload[1]){
-                console.log(files2upload[0].name)
-                console.log(files2upload[1].name)
-                uploadFiles()
             }
         }
         var queue = new NGL.Queue( fn, e.target.files );
@@ -1008,12 +739,6 @@ NGL.MenubarDockingWidget = function( stage ){
     ligandUpload.accept = "." + fileTypesOpen.join( ",." );
     ligandUpload.addEventListener( 'change', ligandUploadOnChange, false );
 
-    // export image
-
-    var exportImageWidget = new NGL.ExportImageWidget( stage )
-        .setDisplay( "none" )
-        .attach();
-
     // event handlers
 
     function onProteinUploadOptionClick () {
@@ -1021,6 +746,43 @@ NGL.MenubarDockingWidget = function( stage ){
     }
     function onLigandUploadOptionClick () {
         ligandUpload.click();
+    }
+
+    function uploadFiles(){
+        var data = new FormData()
+        for(var i=0; i < proteins.length; i++){
+            data.append('proteins', proteins[i])
+        }
+        for(var i=0; i < ligands.length; i++){
+            data.append('ligands', ligands[i])
+        }
+        console.log(data.get('proteins'))
+        console.log(data.get('ligands'))
+        jQuery.ajax({
+            url: '/upload',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout : 600000,
+            type: 'POST',
+            success: function(data) {
+                var docking_result = JSON.parse(JSON.stringify((data)))
+                if(docking_result.error_msg){
+                    alert(docking_result.error_msg)
+                }
+                for(var i=0; i < proteins.length; i++){
+                    for(var j=0; j < ligands.length; j++){
+                        stage.loadFile( docking_result[i][j]["protein"], {
+                            defaultRepresentation: true
+                        } )
+                        stage.loadFile( docking_result[i][j]["ligand"], {
+                            defaultRepresentation: true
+                        } )
+                    }
+                }
+            },
+        });
     }
 
     function onImportOptionClick(){
@@ -1052,29 +814,6 @@ NGL.MenubarDockingWidget = function( stage ){
 
     }
 
-    function onExportImageOptionClick () {
-
-        exportImageWidget
-            .setOpacity( "0.9" )
-            .setLeft( "50px" )
-            .setTop( "80px" )
-            .setDisplay( "block" );
-
-    }
-
-    function onScreenshotOptionClick () {
-
-        stage.makeImage( {
-            factor: 1,
-            antialias: true,
-            trim: false,
-            transparent: false
-        } ).then( function( blob ){
-            NGL.download( blob, "screenshot.png" );
-        } );
-
-    }
-
     // configure menu contents
 
     var createOption = UI.MenubarHelper.createOption;
@@ -1084,8 +823,7 @@ NGL.MenubarDockingWidget = function( stage ){
         createOption( 'Upload protein (.pdb)', onProteinUploadOptionClick ),
         createOption( 'Upload ligand (.sdf)', onLigandUploadOptionClick ),
         createDivider(),
-        createOption( 'Screenshot', onScreenshotOptionClick, 'camera' ),
-        createOption( 'Export image...', onExportImageOptionClick ),
+        createOption( 'Dock', uploadFiles ),
     ];
 
     if( NGL.DatasourceRegistry.listing ){
