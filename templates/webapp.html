@@ -11,7 +11,7 @@
 </head>
 <body>
     <!-- NGL -->
-    <script src="../static/ngl/dist/ngl.js"></script>
+    <script src="../static/ngl/dist/ngl.dev.js"></script>
 
     <!-- UI -->
     <script src="../static/ngl/examples/js/lib/signals.min.js"></script>
@@ -32,7 +32,8 @@
 
     <script>
         NGL.cssDirectory = "../static/ngl/examples/css/";
-        NGL.documentationUrl = "../build/docs/api/ngl/";
+//        NGL.documentationUrl = "../build/docs/api/ngl/";
+        NGL.documentationUrl = "https://github.com/deepchem/deepchem-gui";
 
         // Datasources
         NGL.DatasourceRegistry.add(
@@ -47,7 +48,7 @@
         var stage;
         document.addEventListener( "DOMContentLoaded", function(){
             stage = new NGL.Stage();
-            NGL.StageWidget( stage );
+            NGL.StageWidget( stage )
             var example = NGL.getQuery( "example" );
             if( example ) NGL.ExampleRegistry.load( example, stage );
             var load = NGL.getQuery( "load" );

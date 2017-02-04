@@ -452,3 +452,43 @@ input[type=range]:focus:after {
     #toolbar button {
         margin-right: 6px;
     }
+
+#resultbar {
+    position: absolute;
+    left: 0px;
+    top: 32px;
+    bottom: 0px;
+    width: 600px;
+    overflow: hidden;
+}
+
+    #resultbar .Panel {
+        margin-bottom: 10px;
+    }
+
+    #resultbar .Panel.collapsed {
+        margin-bottom: 0px;
+    }
+
+    #resultbar .CollapsibleContent {
+        margin-top: 10px;
+    }
+
+    #resultbar > .Panel {
+        padding: 10px;
+        border-top: 1px solid;
+    }
+
+    #resultbar > .Content > .Panel {
+        padding: 10px;
+        border-top: 1px solid;
+    }
+
+    #resultbar .Content {
+        top: 40px;
+        bottom: 0px;
+        position: absolute;
+        overflow: auto;
+        left: 0px;
+        width: 100%;
+    }

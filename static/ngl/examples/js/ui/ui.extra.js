@@ -855,7 +855,6 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
                     col.__sortFlag = "ASC";
                 }
             } );
-
         header.add( text );
 
         fullWidth += width + 2 * margin;
