@@ -1,0 +1,3 @@
+recursive-include gui/static *
+recursive-include gui/static/deepchem-gui *
+recursive-include gui/static/ngl *

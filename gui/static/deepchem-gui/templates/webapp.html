@@ -4,40 +4,40 @@
     <title>NGL - webapp</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" href="../static/ngl/examples/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="../static/ngl/examples/css/main.css" />
-    <link rel="subresource" href="../static/ngl/examples/css/light.css" />
-    <link rel="subresource" href="../static/ngl/examples/css/dark.css" />
+    <link rel="stylesheet" href="./static/ngl/examples/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="./static/ngl/examples/css/main.css" />
+    <link rel="subresource" href="./static/ngl/examples/css/light.css" />
+    <link rel="subresource" href="./static/ngl/examples/css/dark.css" />
 </head>
 <body>
     <!-- NGL -->
-    <script src="../static/ngl/dist/ngl.dev.js"></script>
+    <script src="./static/ngl/dist/ngl.js"></script>
 
     <!-- UI -->
-    <script src="../static/ngl/examples/js/lib/signals.min.js"></script>
-    <script src="../static/ngl/examples/js/lib/tether.min.js"></script>
-    <script src="../static/ngl/examples/js/lib/colorpicker.min.js"></script>
-    <script src="../static/ngl/examples/js/ui/ui.js"></script>
-    <script src="../static/ngl/examples/js/ui/ui.extra.js"></script>
-    <script src="../static/ngl/examples/js/ui/ui.ngl.js"></script>
-    <script src="../static/ngl/examples/js/gui.js"></script>
+    <script src="./static/ngl/examples/js/lib/signals.min.js"></script>
+    <script src="./static/ngl/examples/js/lib/tether.min.js"></script>
+    <script src="./static/ngl/examples/js/lib/colorpicker.min.js"></script>
+    <script src="./static/ngl/examples/js/ui/ui.js"></script>
+    <script src="./static/ngl/examples/js/ui/ui.extra.js"></script>
+    <script src="./static/ngl/examples/js/ui/ui.ngl.js"></script>
+    <script src="./static/ngl/examples/js/gui.js"></script>
 
     <!-- EXTRA -->
-    <script src="../static/ngl/examples/js/examples.js"></script>
-    <script src="../static/ngl/examples/js/plugins.js"></script>
+    <script src="./static/ngl/examples/js/examples.js"></script>
+    <script src="./static/ngl/examples/js/plugins.js"></script>
 
     <!-- UPLOAD -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
 
     <script>
-        NGL.cssDirectory = "../static/ngl/examples/css/";
+        NGL.cssDirectory = "./static/ngl/examples/css/";
 //        NGL.documentationUrl = "../build/docs/api/ngl/";
         NGL.documentationUrl = "https://github.com/deepchem/deepchem-gui";
 
         // Datasources
         NGL.DatasourceRegistry.add(
-            "data", new NGL.StaticDatasource( "../static/ngl/data/" )
+            "data", new NGL.StaticDatasource( "./static/ngl/data/" )
         );
 
         // Plugins

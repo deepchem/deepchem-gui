@@ -12,7 +12,7 @@ The GUI heavily relies on the molecular visualization library [NGL](https://gith
 * [Contributing to DeepChem](#contributing-to-deepchem)
 * [DeepChem Publications](#deepchem-publications)
 * [About Us](#about-us)
-    
+
 ## Requirements
 * [DeepChem](https://github.com/deepchem/deepchem)
 * [NGL](https://github.com/arose/ngl)
@@ -24,35 +24,39 @@ Installation from source is the only currently supported format.
 
 1. Install DeepChem using the [instructions here](https://github.com/deepchem/deepchem).
 
-2. Install Flask:
+1. Install Flask:
     In the Anaconda environment you created in the previous step to install DeepChem, execute-
     ```bash
-    pip install Flask
+    conda install flask
     ```
 
-3. Clone the `deepchem-gui` github repo:
+1. Clone the `deepchem-gui` github repo:
    ```bash
-   git clone https://github.com/deepchem/deepchem-gui.git
+   git clone https://github.com/deepchem/deepchem-gui.git && cd deepchem-gui
    ```
+
+1. Install `deepchem-gui`:
+   ```bash
+   python setup.py install
+   ```
+
 
 ## Usage
 
-1. Launch the web application: <br/> At present, the only way to access the GUI is to run the server on your local machine.
-   In the Anaconda environment with DeepChem installed, `cd` into the `deepchem-gui` directory and execute-
+1. In the Anaconda environment with `deepchem-gui` installed, execute:
     ```bash
-    export FLASK_APP=deepchem-gui.py
- 
-    flask run
+    deepchem-gui server
     ```
-2. Navigate to http://127.0.0.1:5000/ in your browser to open the application.
+   This should open your default browser and launch the application at
+   http://127.0.0.1:5000/. Use the `-h` flag to reveal a full list of options.
 
-3. Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb
+1. Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb
 
-4. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein.
+1. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein.
 
-5. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations).
+1. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations).
 
-Note: This repository is under active development so bugs and surprises are likely. Kindly raise an issue on GitHub if you run into problems and we will try and resolve it asap. Alternatively you can also contribute to the repository by following [these guidelines](https://github.com/deepchem/deepchem#contributing-to-deepchem). Client side issues can be inspected using the JavaScript console of the browser while server side errors will be displayed in the shell. 
+Note: This repository is under active development so bugs and surprises are likely. Kindly raise an issue on GitHub if you run into problems and we will try and resolve it asap. Alternatively you can also contribute to the repository by following [these guidelines](https://github.com/deepchem/deepchem#contributing-to-deepchem). Client side issues can be inspected using the JavaScript console of the browser while server side errors will be displayed in the shell.
 
 ## DeepChem Publications
 1. [Computational Modeling of β-secretase 1 (BACE-1) Inhibitors using

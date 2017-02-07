@@ -1,3 +1,7 @@
 .idea
-static/data/*
 *.tar.gz
+__pycache__
+*.egg-info
+build/
+.DS_STORE
+.swp
