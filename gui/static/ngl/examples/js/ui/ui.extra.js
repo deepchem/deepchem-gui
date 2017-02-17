@@ -637,6 +637,7 @@ UI.VirtualList = function( items, itemHeight, height, generatorFn ){
     list.style.width = '100%';
     list.style.height = height + 'px';
     list.style[ "overflow-y" ] = 'auto';
+    list.style["overflow-x"] = 'auto';
     list.style.position = 'relative';
     list.style.padding = 0;
 
@@ -795,6 +796,7 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
         .setWidth( "100%" );
 
     var fullWidth = 0;
+    // var fullWidth = p.fullWidth
 
     var selected = [];
 
@@ -839,7 +841,7 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
         var width = col.width || defaultWidth;
         var margin = col.margin || defaultMargin;
 
-        var text = new UI.EllipsisText()
+        var text = new UI.Text()
             .setValue( col.name )
             .setWidth( width + "px" )
             .setTextAlign( col.align || defaultAlign )
@@ -854,7 +856,8 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
                 }else{
                     col.__sortFlag = "ASC";
                 }
-            } );
+            } )
+            .setFontWeight("bold");
         header.add( text );
 
         fullWidth += width + 2 * margin;
@@ -879,7 +882,7 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
             if( typeof value === "object" ){
                 element = value;
             }else{
-                element = new UI.Text()
+                element = new UI.EllipsisText()
                     .setValue( value );
             }
 
@@ -902,7 +905,9 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
                     if( typeof col.onMouseOut === "function" ){
                         col.onMouseOut( event, index, value );
                     }
-                } );
+                } )
+                .setOverflowX("auto")
+                .setTextOverflow("")
 
             panel.add( element );
 

@@ -557,7 +557,7 @@ NGL.ResultbarWidget = function(stage){
                 var row = results[i]
                 if(i>0) {
                     if(!(row[smiles_img_col_idx] == "Invalid")){
-                        var smiles_img_src = "<img src='" + row[smiles_img_col_idx] + "' style='width:100px;height:100px;'>"
+                        var smiles_img_src = "<img src='" + row[smiles_img_col_idx] + "' style='width:200px;height:200px;'>"
                         row[smiles_img_col_idx] = new UI.Html(smiles_img_src)
                     }
                 }
@@ -565,12 +565,17 @@ NGL.ResultbarWidget = function(stage){
             }
             var columns = []
             for (var j=0; j < results[0].length; j++){
-                columns.push({index:j, name: results[0][j], width:300})
+                if(j!=smiles_img_col_idx) {
+                    columns.push({index: j, name: results[0][j], width: 100})
+                }
+                else {
+                    columns.push({index: j, name: results[0][j], width: 200})
+                }
             }
             items.splice(0, 1);
 
-            var itemHeight = 100
-            var height = 500
+            var itemHeight = 200
+            var height = 704
             var params = {defaultMargin: 5}
 
         }
@@ -598,11 +603,11 @@ NGL.ResultbarWidget = function(stage){
                     if(!(row[smiles_1_img_col_idx] == "Invalid" ||
                         row[smiles_2_img_col_idx] == "Invalid" ||
                         row[smarts_img_col_idx] == "Invalid")){
-                        var smiles_1_img_src = "<img src='" + row[smiles_1_img_col_idx] + "' style='width:50px;height:50px;'>"
+                        var smiles_1_img_src = "<img src='" + row[smiles_1_img_col_idx] + "' style='width:200px;height:200px;'>"
                         row[smiles_1_img_col_idx] = new UI.Html(smiles_1_img_src)
-                        var smiles_2_img_src = "<img src='" + row[smiles_2_img_col_idx] + "' style='width:50px;height:50px;'>"
+                        var smiles_2_img_src = "<img src='" + row[smiles_2_img_col_idx] + "' style='width:200px;height:200px;'>"
                         row[smiles_2_img_col_idx] = new UI.Html(smiles_2_img_src)
-                        var smarts_img_src = "<img src='" + row[smarts_img_col_idx] + "' style='width:50px;height:50px;'>"
+                        var smarts_img_src = "<img src='" + row[smarts_img_col_idx] + "' style='width:200px;height:200px;'>"
                         row[smarts_img_col_idx] = new UI.Html(smarts_img_src)
                     }
                 }
@@ -611,11 +616,16 @@ NGL.ResultbarWidget = function(stage){
 
             var columns = []
             for (var j=0; j < results[0].length; j++){
-                columns.push({index:j, name: results[0][j], width:100})
+                if(j == smiles_1_img_col_idx || j == smiles_2_img_col_idx || j == smarts_img_col_idx){
+                    columns.push({index:j, name: results[0][j], width:200})
+                }
+                else{
+                    columns.push({index:j, name: results[0][j], width:100})
+                }
             }
             items.splice(0, 1);
 
-            var itemHeight = 50
+            var itemHeight = 200
             var height = 704
             var params = {defaultMargin: 5}
 

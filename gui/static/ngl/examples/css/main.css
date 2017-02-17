@@ -457,10 +457,10 @@ input[type=range]:focus:after {
     position: absolute;
     left: 32px;
     right: 300px;
-    left: 0px;
     top: 32px;
     bottom: 32px;
-    overflow: hidden;
+    /*overflow: hidden;*/
+    overflow-x: auto;
 }
 
     #resultbar .Panel {
