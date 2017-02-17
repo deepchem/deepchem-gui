@@ -65571,10 +65571,10 @@ function matchName( name, comp ){
  */
 
 /**
- * {@link Signal}, dispatched upon generating docking results
+ * {@link Signal}, dispatched upon generating table to display
  * @example
- * stage.signals.generatedResults.add( function( results ){ ... } );
- * @event Stage#generatedResults
+ * stage.signals.generatedTable.add( function( results ){ ... } );
+ * @event Stage#generatedTable
  * @type {Data}
  */
 
@@ -65600,7 +65600,7 @@ function Stage( eid, params ){
         clicked: new Signal(),
         hovered: new Signal(),
 
-        generatedResults: new Signal()
+        generatedTable: new Signal(),
     };
 
     //
@@ -66394,9 +66394,10 @@ Stage.prototype = {
 
     },
 
-    displayResults: function(results){
-        this.signals.generatedResults.dispatch(results);
-    }
+    displayTable: function(data, type){
+        this.signals.generatedTable.dispatch(data, type);
+    },
+
 };
 
 /**

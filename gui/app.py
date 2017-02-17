@@ -1,10 +1,14 @@
 import os
-from flask import Flask, url_for, request, render_template, jsonify
+from flask import Flask, url_for, request, render_template, jsonify, send_file
 from werkzeug.utils import secure_filename
 import deepchem as dc
 import subprocess
 from shutil import copyfile
-
+import csv
+import rdkit
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from rdkit.Chem import Draw
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static/')
 DEEPCHEM_GUI = Flask('deepchem-gui', static_folder=STATIC_DIR,
@@ -12,6 +16,7 @@ DEEPCHEM_GUI = Flask('deepchem-gui', static_folder=STATIC_DIR,
                      template_folder=os.path.join(STATIC_DIR, 'deepchem-gui',
                                                   'templates')
                     )
+
 UPLOAD_DIR = os.path.join(STATIC_DIR, "data/")
 if not os.path.isdir(UPLOAD_DIR):
     os.mkdir(UPLOAD_DIR)
@@ -29,10 +34,13 @@ def upload():
 
         proteins = request.files.getlist('proteins')
         ligands = request.files.getlist('ligands')
+        smiles = request.files.getlist('smiles')
+        smarts = request.files.getlist('smarts')
 
-        protein_fns = []
-        ligand_fns = []
         if proteins and ligands:
+
+            protein_fns = []
+            ligand_fns = []
 
             for protein in proteins:
                 protein_fn = os.path.join(
@@ -50,9 +58,8 @@ def upload():
                 ligand.save(ligand_fn)
                 ligand_fns.append(ligand_fn)
 
-            # docking_result = dock(protein_fns, ligand_fns)
-            # print(docking_result)
-            docking_result = [[{'protein': u'/tmp/tmp7ZY3yl/4oc0_protein.pdb', 'score': 5.3767399999999981, 'ligand': u'/tmp/tmp7ZY3yl/4oc0_ligand_docked.pdb'}]]
+            docking_result = dock(protein_fns, ligand_fns)
+            print(docking_result)
 
             for i in range(len(protein_fns)):
                 for j in range(len(ligand_fns)):
@@ -72,11 +79,132 @@ def upload():
                         'static', filename="data/" + new_ligand_fn)
 
             return jsonify(docking_result)
+
+        elif smiles:
+
+            smiles = smiles[0]
+
+            smiles_fn = os.path.join(
+                UPLOAD_DIR,
+                secure_filename(smiles.filename)
+            )
+            smiles.save(smiles_fn)
+
+            csvfile = open(smiles_fn, 'r')
+            csvreader = csv.reader(csvfile, delimiter=',')
+            data = []
+            for row in csvreader:
+                data.append(row)
+
+            data = render_smiles(data)
+
+            return jsonify(data)
+
+        elif smarts:
+
+            smarts = smarts[0]
+
+            smarts_fn = os.path.join(
+                UPLOAD_DIR,
+                secure_filename(smarts.filename)
+            )
+            smarts.save(smarts_fn)
+
+            csvfile = open(smarts_fn, 'r')
+            csvreader = csv.reader(csvfile, delimiter=',')
+            data = []
+            for row in csvreader:
+                data.append(row)
+
+            data = render_smarts(data)
+
+            return jsonify(data)
+
         else:
             return jsonify(error_msg="Invalid file transfer.")
     else:
         raise NotImplementedError
 
+
+def render_smiles(data):
+
+    smiles_col_idx = [j for j in range(len(data[0])) if data[0][j]=="SMILES"][0]
+
+    for i, row in enumerate(data):
+        if i==0:
+            data[i].append("SMILES IMG")
+            continue
+        try:
+            smiles_str = data[i][smiles_col_idx]
+            smiles = Chem.MolFromSmiles(smiles_str)
+            AllChem.Compute2DCoords(smiles)
+            smiles_fn = 'smiles_%d.png' % i
+            smiles_img = os.path.join(UPLOAD_DIR, smiles_fn)
+            Draw.MolToFile(smiles, smiles_img)
+
+            data[i].append(url_for('static', filename='data/' + smiles_fn))
+        except Exception as e:
+            print e
+            data[i].append("Invalid")
+            pass
+    return data
+
+
+def render_smarts(data):
+
+    smarts_col_idx = [j for j in range(len(data[0])) if data[0][j]=="SMARTS"][0]
+    smiles_col_idx_1 = [j for j in range(len(data[0])) if data[0][j]=="SMILES_1"][0]
+    smiles_col_idx_2 = [j for j in range(len(data[0])) if data[0][j]=="SMILES_2"][0]
+
+    for i, row in enumerate(data):
+        if i==0:
+            data[i].append("PRODUCT")
+            data[i].append("SMILES_1 IMG")
+            data[i].append("SMILES_2 IMG")
+            data[i].append("PRODUCT IMG")
+            continue
+
+        try:
+            smarts_str = data[i][smarts_col_idx]
+            smiles_str_1 = data[i][smiles_col_idx_1]
+            smiles_str_2 = data[i][smiles_col_idx_2]
+
+            rxn = AllChem.ReactionFromSmarts(smarts_str)
+            ps = rxn.RunReactants((Chem.MolFromSmiles(smiles_str_1), Chem.MolFromSmiles(smiles_str_2)))
+
+            product = ps[0][0]
+            product_str = Chem.MolToSmiles(product)
+            data[i].append(product_str)
+
+            AllChem.Compute2DCoords(product)
+            product_fn = 'product_%d.png' % i
+            product_img = os.path.join(UPLOAD_DIR, product_fn)
+            Draw.MolToFile(product, product_img)
+
+            smiles_1 = Chem.MolFromSmiles(smiles_str_1)
+            AllChem.Compute2DCoords(smiles_1)
+            smiles_1_fn = 'smiles_1_%d.png' % i
+            smiles_1_img = os.path.join(UPLOAD_DIR, smiles_1_fn)
+            Draw.MolToFile(smiles_1, smiles_1_img)
+
+            smiles_2 = Chem.MolFromSmiles(smiles_str_2)
+            AllChem.Compute2DCoords(smiles_2)
+            smiles_2_fn = 'smiles_2_%d.png' % i
+            smiles_2_img = os.path.join(UPLOAD_DIR, smiles_2_fn)
+            Draw.MolToFile(smiles_2, smiles_2_img)
+
+            data[i].append(url_for('static', filename='data/' + product_fn))
+            data[i].append(url_for('static', filename='data/' + smiles_1_fn))
+            data[i].append(url_for('static', filename='data/' + smiles_2_fn))
+
+        except Exception as e:
+            print e
+            data[i].append("Invalid")
+            data[i].append("Invalid")
+            data[i].append("Invalid")
+            pass
+
+    return data
 
 def dock(protein_fns, ligand_fns):
 

@@ -123,8 +123,8 @@ NGL.Preferences = function( id, defaultParams ){
         impostor: true,
         quality: "auto",
         sampleLevel: 0,
-        theme: "dark",
-        backgroundColor: "black",
+        theme: "light",
+        backgroundColor: "white",
         overview: true,
         rotateSpeed: 2.0,
         zoomSpeed: 1.2,
@@ -507,41 +507,121 @@ NGL.ResultbarWidget = function(stage){
 
     var container = new UI.CollapsiblePanel()
 
-    stage.signals.generatedResults.add( function (results){
+    stage.signals.generatedTable.add( function (results, type){
 
         container.clear()
 
-        var items = []
-        // console.log(results.length)
-        // console.log(results[0].length)
-        for(var i=0; i < results.length; i++){
-            for(var j=0; j < results[0].length; j++){
-                var protein = results[i][j]['protein'].split("/")
-                var ligand = results[i][j]['ligand'].split("/")
-                items.push([(i*results.length) + (j+1), protein[protein.length-1], ligand[ligand.length-1], results[i][j]['score']])
+        if(type=="docking") {
+
+            var items = []
+            for (var i = 0; i < results.length; i++) {
+                for (var j = 0; j < results[0].length; j++) {
+                    var protein = results[i][j]['protein'].split("/")
+                    var ligand = results[i][j]['ligand'].split("/")
+                    items.push([(i * results.length) + (j + 1), protein[protein.length - 1], ligand[ligand.length - 1], results[i][j]['score']])
+                }
             }
+
+            var loadComplex = function (event, idx) {
+                stage.removeAllComponents()
+                var protein_url = "/static/data/" + items[idx][1]
+                var ligand_url = "/static/data/" + items[idx][2]
+                console.log(protein_url)
+                console.log(ligand_url)
+                stage.loadFile(protein_url, {defaultRepresentation: true})
+                stage.loadFile(ligand_url, {defaultRepresentation: true})
+            }
+
+            var columns = [{index: 0, name: "No.", width: 50}, {index: 1, name: "Protein", width: 200}, {
+                index: 2,
+                name: "Ligand",
+                width: 200
+            }, {index: 3, name: "Score", width: 100}]
+
+            var itemHeight = 30
+            var height = 300
+            var params = {defaultMargin: 5, onRowSelect: loadComplex}
+
+        }
+        else if(type=="smiles"){
+
+            var items = []
+            var smiles_img_col_idx = -1
+            for(var j=0; j < results[0].length; j++){
+                if(results[0][j] == "SMILES IMG"){
+                    smiles_img_col_idx = j
+                    break
+                }
+            }
+            for (var i = 0; i < results.length; i++) {
+                var row = results[i]
+                if(i>0) {
+                    if(!(row[smiles_img_col_idx] == "Invalid")){
+                        var smiles_img_src = "<img src='" + row[smiles_img_col_idx] + "' style='width:100px;height:100px;'>"
+                        row[smiles_img_col_idx] = new UI.Html(smiles_img_src)
+                    }
+                }
+                items.push(row)
+            }
+            var columns = []
+            for (var j=0; j < results[0].length; j++){
+                columns.push({index:j, name: results[0][j], width:300})
+            }
+            items.splice(0, 1);
+
+            var itemHeight = 100
+            var height = 500
+            var params = {defaultMargin: 5}
+
         }
 
-        var loadComplex = function(event, idx){
-            stage.removeAllComponents()
-            var protein_url = "/static/data/" + items[idx][1]
-            var ligand_url = "/static/data/" + items[idx][2]
-            console.log(protein_url)
-            console.log(ligand_url)
-            stage.loadFile( protein_url, {defaultRepresentation: true} )
-            stage.loadFile( ligand_url, {defaultRepresentation: true} )
+        else if(type=="smarts"){
+
+            var items = []
+            var smiles_1_img_col_idx = -1
+            var smiles_2_img_col_idx = -1
+            var smarts_img_col_idx = -1
+            for(var j=0; j < results[0].length; j++){
+                if(results[0][j] == "SMILES_1 IMG"){
+                    smiles_1_img_col_idx = j
+                }
+                if(results[0][j] == "SMILES_2 IMG"){
+                    smiles_2_img_col_idx = j
+                }
+                if(results[0][j] == "PRODUCT IMG"){
+                    smarts_img_col_idx = j
+                }
+            }
+            for (var i = 0; i < results.length; i++) {
+                var row = results[i]
+                if(i>0) {
+                    if(!(row[smiles_1_img_col_idx] == "Invalid" ||
+                        row[smiles_2_img_col_idx] == "Invalid" ||
+                        row[smarts_img_col_idx] == "Invalid")){
+                        var smiles_1_img_src = "<img src='" + row[smiles_1_img_col_idx] + "' style='width:50px;height:50px;'>"
+                        row[smiles_1_img_col_idx] = new UI.Html(smiles_1_img_src)
+                        var smiles_2_img_src = "<img src='" + row[smiles_2_img_col_idx] + "' style='width:50px;height:50px;'>"
+                        row[smiles_2_img_col_idx] = new UI.Html(smiles_2_img_src)
+                        var smarts_img_src = "<img src='" + row[smarts_img_col_idx] + "' style='width:50px;height:50px;'>"
+                        row[smarts_img_col_idx] = new UI.Html(smarts_img_src)
+                    }
+                }
+                items.push(row)
+            }
+
+            var columns = []
+            for (var j=0; j < results[0].length; j++){
+                columns.push({index:j, name: results[0][j], width:100})
+            }
+            items.splice(0, 1);
+
+            var itemHeight = 50
+            var height = 704
+            var params = {defaultMargin: 5}
+
         }
-
-        // console.log(items)
-
-        var columns = [{index:0, name:"No.", width: 50}, {index:1, name:"Protein", width: 200}, {index:2, name:"Ligand", width: 200}, {index:3, name:"Score", width: 100}]
-
-        var itemHeight = 30
-        var height = 300
-        var params = {defaultMargin: 5, onRowSelect: loadComplex}
 
         var table = new UI.VirtualTable(items, itemHeight, height, columns, params)
-
         container.add(table)
 
     })
@@ -578,6 +658,9 @@ NGL.MenubarVisualizationWidget = function( stage ){
     if( dcdIndex !== -1 ) fileTypesOpen.splice( dcdIndex, 1 );  // disallow dcd files
     var fileTypesImport = fileTypesOpen;
 
+    var smilesFileTypesImport = ["csv"]
+    var smartsFileTypesImport = ["csv"]
+
     function fileInputOnChange( e ){
         var fn = function( file, callback ){
             var ext = file.name.split('.').pop().toLowerCase();
@@ -592,12 +675,69 @@ NGL.MenubarVisualizationWidget = function( stage ){
         var queue = new NGL.Queue( fn, e.target.files );
     }
 
+    function smilesFileInputOnChange( e ){
+        var fn = function( file, callback ){
+            var ext = file.name.split('.').pop().toLowerCase();
+            if( smilesFileTypesImport.includes( ext ) ){
+                uploadFile(file, "smiles")
+            }else{
+                console.error( "unknown filetype: " + ext );
+            }
+        }
+        var queue = new NGL.Queue( fn, e.target.files );
+    }
+
+    function smartsFileInputOnChange( e ){
+        var fn = function( file, callback ){
+            var ext = file.name.split('.').pop().toLowerCase();
+            if( smartsFileTypesImport.includes( ext ) ){
+                uploadFile(file, "smarts")
+            }else{
+                console.error( "unknown filetype: " + ext );
+            }
+        }
+        var queue = new NGL.Queue( fn, e.target.files );
+    }
+
+    function uploadFile(file, data_type){
+        var data = new FormData()
+        data.append(data_type, file)
+        jQuery.ajax({
+            url: '/upload',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout : 200000,
+            type: 'POST',
+            success: function(data) {
+                var parsed_data = JSON.parse(JSON.stringify((data)))
+                stage.displayTable(parsed_data, type=data_type)
+                return
+            },
+        });
+    }
+
     var fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.multiple = true;
     fileInput.style.display = "none";
     fileInput.accept = "." + fileTypesOpen.join( ",." );
     fileInput.addEventListener( 'change', fileInputOnChange, false );
+
+    var smilesFileInput = document.createElement("input");
+    smilesFileInput.type = "file";
+    smilesFileInput.multiple = false;
+    smilesFileInput.style.display = "none";
+    smilesFileInput.accept = "." + smilesFileTypesImport.join( ",." );
+    smilesFileInput.addEventListener( 'change', smilesFileInputOnChange, false );
+
+    var smartsFileInput = document.createElement("input");
+    smartsFileInput.type = "file";
+    smartsFileInput.multiple = false;
+    smartsFileInput.style.display = "none";
+    smartsFileInput.accept = "." + smartsFileTypesImport.join( ",." );
+    smartsFileInput.addEventListener( 'change', smartsFileInputOnChange, false );
 
     // export image
 
@@ -609,6 +749,14 @@ NGL.MenubarVisualizationWidget = function( stage ){
 
     function onOpenOptionClick () {
         fileInput.click();
+    }
+
+    function onSmilesOptionClick(){
+        smilesFileInput.click();
+    }
+
+    function onSmartsOptionClick(){
+        smartsFileInput.click();
     }
 
     function onImportOptionClick(){
@@ -706,8 +854,10 @@ NGL.MenubarVisualizationWidget = function( stage ){
     var createDivider = UI.MenubarHelper.createDivider;
 
     var menuConfig = [
-        createOption( 'Open...', onOpenOptionClick ),
-        createInput( 'PDB', onPdbInputKeyDown ),
+        createOption( '3D Structure (File)', onOpenOptionClick ),
+        createInput( '3D Structure (PDB code)', onPdbInputKeyDown ),
+        createOption( 'SMILES CSV (File)', onSmilesOptionClick ),
+        createOption( 'SMARTS CSV (File)', onSmartsOptionClick ),
         createCheckbox( 'asTrajectory', false, onAsTrajectoryChange ),
         createCheckbox( 'firstModelOnly', false, onFirstModelOnlyChange ),
         createCheckbox( 'cAlphaOnly', false, onCAlphaOnlyChange ),
@@ -818,7 +968,7 @@ NGL.MenubarDockingWidget = function( stage ){
                 if(docking_result.error_msg){
                     alert(docking_result.error_msg)
                 }
-                stage.displayResults(docking_result)
+                stage.displayTable(data=docking_result, type="docking")
                 proteins = []
                 ligands = []
                 return

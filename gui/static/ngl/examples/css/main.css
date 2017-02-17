@@ -455,10 +455,11 @@ input[type=range]:focus:after {
 
 #resultbar {
     position: absolute;
+    left: 32px;
+    right: 300px;
     left: 0px;
     top: 32px;
-    bottom: 0px;
-    width: 600px;
+    bottom: 32px;
     overflow: hidden;
 }
 
