@@ -7,18 +7,20 @@ from shutil import copyfile
 
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static/')
-DEEPCHEM_GUI = Flask('deepchem-gui', static_folder=STATIC_DIR, 
+DEEPCHEM_GUI = Flask('deepchem-gui', static_folder=STATIC_DIR,
                      static_url_path='/static',
                      template_folder=os.path.join(STATIC_DIR, 'deepchem-gui',
                                                   'templates')
                     )
-
+UPLOAD_DIR = os.path.join(STATIC_DIR, "data/")
+if not os.path.isdir(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
+    print "Created data directory"
 
 # serve ngl webapp clone
 @DEEPCHEM_GUI.route('/')
 def webapp():
     return render_template('webapp.html')
-
 
 # download protein and ligand files
 @DEEPCHEM_GUI.route('/upload', methods=['POST'])
@@ -34,7 +36,7 @@ def upload():
 
             for protein in proteins:
                 protein_fn = os.path.join(
-                    DEEPCHEM_GUI.config['UPLOAD_FOLDER'],
+                    UPLOAD_DIR,
                     secure_filename(protein.filename)
                     )
                 protein.save(protein_fn)
@@ -42,31 +44,32 @@ def upload():
 
             for ligand in ligands:
                 ligand_fn = os.path.join(
-                    DEEPCHEM_GUI.config['UPLOAD_FOLDER'],
+                    UPLOAD_DIR,
                     secure_filename(ligand.filename)
                     )
                 ligand.save(ligand_fn)
                 ligand_fns.append(ligand_fn)
 
-            docking_result = dock(protein_fns, ligand_fns)
-            print(docking_result)
+            # docking_result = dock(protein_fns, ligand_fns)
+            # print(docking_result)
+            docking_result = [[{'protein': u'/tmp/tmp7ZY3yl/4oc0_protein.pdb', 'score': 5.3767399999999981, 'ligand': u'/tmp/tmp7ZY3yl/4oc0_ligand_docked.pdb'}]]
 
             for i in range(len(protein_fns)):
                 for j in range(len(ligand_fns)):
 
                     protein_fn = docking_result[i][j]["protein"]
-                    new_protein_fn = "data/" + protein_fn.split("/")[-1]
+                    new_protein_fn = protein_fn.split("/")[-1]
                     copyfile(protein_fn, os.path.join(
-                        STATIC_DIR, new_protein_fn))
+                        UPLOAD_DIR, new_protein_fn))
                     docking_result[i][j]["protein"] = url_for(
-                        STATIC_DIR, filename=new_protein_fn)
+                        'static', filename="data/" + new_protein_fn)
 
                     ligand_fn = docking_result[i][j]["ligand"]
-                    new_ligand_fn = "data/" + ligand_fn.split("/")[-1]
+                    new_ligand_fn = ligand_fn.split("/")[-1]
                     copyfile(ligand_fn,
-                             os.path.join(STATIC_DIR, new_ligand_fn))
+                             os.path.join(UPLOAD_DIR, new_ligand_fn))
                     docking_result[i][j]["ligand"] = url_for(
-                        STATIC_DIR, filename=new_ligand_fn)
+                        'static', filename="data/" + new_ligand_fn)
 
             return jsonify(docking_result)
         else:
