@@ -507,14 +507,16 @@ NGL.ResultbarWidget = function(stage){
 
     var container = new UI.CollapsiblePanel()
 
-    var jsme_container = new UI.Html("<div id='jsme_container'></div>")
-    jsme_container.setDisplay("none")
-    container.add(jsme_container)
+    var editor = new UI.Html("<div id='chemComposer'></div>")
+    editor.setDisplay("none")
+    container.add(editor)
 
     stage.signals.generatedTable.add( function (results, type){
 
-        // remove table and turn off display for jsme
-        // container.clear()
+        if (container.content.children.length > 1){
+            container.content.removeChild( container.content.lastChild );
+        }
+        editor.setDisplay("none")
 
         if(type=="docking") {
 
@@ -636,12 +638,12 @@ NGL.ResultbarWidget = function(stage){
 
         }
 
-        else if(type == "jsme") {
-            jsme_container.setDisplay("block")
+        else if(type == "editor") {
+            editor.setDisplay("block")
 
         }
 
-        if(type != "jsme") {
+        if(type != "editor") {
             var table = new UI.VirtualTable(items, itemHeight, height, columns, params)
             container.add(table)
         }
@@ -781,8 +783,8 @@ NGL.MenubarVisualizationWidget = function( stage ){
         smartsFileInput.click();
     }
 
-    function onJSMEOptionClick(){
-        stage.displayTable(null, type="jsme")
+    function onEditorOptionClick(){
+        stage.displayTable(null, type="editor")
     }
 
     function onImportOptionClick(){
@@ -884,7 +886,7 @@ NGL.MenubarVisualizationWidget = function( stage ){
         // createInput( '3D Structure (PDB code)', onPdbInputKeyDown ),
         createOption( 'SMILES', onSmilesOptionClick ),
         createOption( 'Reaction SMARTS', onSmartsOptionClick ),
-        createOption( 'JSME', onJSMEOptionClick ),
+        createOption( 'Molecule Editor', onEditorOptionClick ),
         createCheckbox( 'asTrajectory', false, onAsTrajectoryChange ),
         createCheckbox( 'firstModelOnly', false, onFirstModelOnlyChange ),
         createCheckbox( 'cAlphaOnly', false, onCAlphaOnlyChange ),

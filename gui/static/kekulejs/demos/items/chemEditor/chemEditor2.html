@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html manifest1="chemEditor.manifest1">
+<head>
+	<meta charset="UTF-8">
+	<title>Chem Editor Demo</title>
+	<script src="../../libs/raphael-min.2.0.1.js"></script>
+
+	<script src="../../libs/kekule/kekule.js?modules=chemWidget,algorithm"></script>
+	<link rel="stylesheet" type="text/css" href="../../libs/kekule/themes/default/kekule.css" />
+
+	<script>
+		var chemEditor;
+		var chemComposer
+		function init()
+		{
+			var elem = document.getElementById('chemComposer');
+			var chemEditor = new Kekule.Editor.ChemSpaceEditor(document, null, Kekule.Render.RendererType.R2D);
+			chemComposer = new Kekule.Editor.Composer(elem, chemEditor);
+
+			// adjust size
+			adjustSize();
+
+			window.onresize = adjustSize;
+		}
+		function adjustSize()
+		{
+			var dim = Kekule.HtmlElementUtils.getViewportDimension(document);
+			chemComposer.setWidth(dim.width - 50 + 'px').setHeight(dim.height - 30 + 'px');
+		}
+
+		Kekule.X.domReady(init);
+	</script>
+</head>
+<body onload="init()">
+	<div id="chemComposer" style="width:100px;height:100px"></div>
+</body>
+</html>
