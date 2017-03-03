@@ -507,9 +507,14 @@ NGL.ResultbarWidget = function(stage){
 
     var container = new UI.CollapsiblePanel()
 
+    var jsme_container = new UI.Html("<div id='jsme_container'></div>")
+    jsme_container.setDisplay("none")
+    container.add(jsme_container)
+
     stage.signals.generatedTable.add( function (results, type){
 
-        container.clear()
+        // remove table and turn off display for jsme
+        // container.clear()
 
         if(type=="docking") {
 
@@ -557,7 +562,7 @@ NGL.ResultbarWidget = function(stage){
                 var row = results[i]
                 if(i>0) {
                     if(!(row[smiles_img_col_idx] == "Invalid")){
-                        var smiles_img_src = "<img src='" + row[smiles_img_col_idx] + "' style='width:200px;height:200px;'>"
+                        var smiles_img_src = "<img src='" + row[smiles_img_col_idx] + "' style='width:200px;height:200px'>"
                         row[smiles_img_col_idx] = new UI.Html(smiles_img_src)
                     }
                 }
@@ -631,8 +636,15 @@ NGL.ResultbarWidget = function(stage){
 
         }
 
-        var table = new UI.VirtualTable(items, itemHeight, height, columns, params)
-        container.add(table)
+        else if(type == "jsme") {
+            jsme_container.setDisplay("block")
+
+        }
+
+        if(type != "jsme") {
+            var table = new UI.VirtualTable(items, itemHeight, height, columns, params)
+            container.add(table)
+        }
 
     })
 
@@ -769,6 +781,10 @@ NGL.MenubarVisualizationWidget = function( stage ){
         smartsFileInput.click();
     }
 
+    function onJSMEOptionClick(){
+        stage.displayTable(null, type="jsme")
+    }
+
     function onImportOptionClick(){
 
         var datasource = NGL.DatasourceRegistry.listing;
@@ -864,10 +880,11 @@ NGL.MenubarVisualizationWidget = function( stage ){
     var createDivider = UI.MenubarHelper.createDivider;
 
     var menuConfig = [
-        createOption( '3D Structure (File)', onOpenOptionClick ),
-        createInput( '3D Structure (PDB code)', onPdbInputKeyDown ),
-        createOption( 'SMILES CSV (File)', onSmilesOptionClick ),
-        createOption( 'SMARTS CSV (File)', onSmartsOptionClick ),
+        createOption( '3D Structure', onOpenOptionClick ),
+        // createInput( '3D Structure (PDB code)', onPdbInputKeyDown ),
+        createOption( 'SMILES', onSmilesOptionClick ),
+        createOption( 'Reaction SMARTS', onSmartsOptionClick ),
+        createOption( 'JSME', onJSMEOptionClick ),
         createCheckbox( 'asTrajectory', false, onAsTrajectoryChange ),
         createCheckbox( 'firstModelOnly', false, onFirstModelOnlyChange ),
         createCheckbox( 'cAlphaOnly', false, onCAlphaOnlyChange ),

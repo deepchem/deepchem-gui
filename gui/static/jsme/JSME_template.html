@@ -1,0 +1,41 @@
+<html>
+<head>
+<script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+<title>JME Example</title>
+</head>
+
+<body>
+
+<script type="text/javascript" language="javascript">
+	function getJMEstring() {
+		var data = document.JME.jmeFile();
+		document.getElementById("jme_output").value = data;
+	}
+	function setTemplate() {
+		
+		var jme = document.getElementById("jme_output").value;
+		var name = document.getElementById("name_template").value;
+		document.JME.setTemplate(jme, name);
+		
+	}
+
+
+</script>
+
+<div code="JME.class" name="JME" archive="JME.jar" width="360" height="315" id="JME">
+<param name="options" value="star">
+You have to enable JavaScript in your browser to use JSME! </div>
+
+
+
+<button type="button" onclick='getJMEstring();'>Get JME string</button>
+<TEXTAREA id="jme_output" ROWS=2 COLS=80></TEXTAREA>
+
+<bR>
+<HR>
+
+<button type="button" onclick='setTemplate();'>set template</button> <BR>
+Template name: <TEXTAREA id="name_template" ROWS=1 COLS=20></TEXTAREA><BR>
+
+</body>
+</html>

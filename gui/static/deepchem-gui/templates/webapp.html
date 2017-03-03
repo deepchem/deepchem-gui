@@ -10,8 +10,18 @@
     <link rel="subresource" href="./static/ngl/examples/css/dark.css" />
 </head>
 <body>
+
     <!-- NGL -->
     <script src="./static/ngl/dist/ngl.dev.js"></script>
+
+    <!-- JSME -->
+    <script src="./static/jsme/jsme/jsme.nocache.js"></script>
+    <script>
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
+       }
+    </script>
 
     <!-- UI -->
     <script src="./static/ngl/examples/js/lib/signals.min.js"></script>
@@ -21,6 +31,13 @@
     <script src="./static/ngl/examples/js/ui/ui.extra.js"></script>
     <script src="./static/ngl/examples/js/ui/ui.ngl.js"></script>
     <script src="./static/ngl/examples/js/gui.js"></script>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="modal_img">
+      <div id="modal_caption"></div>
+    </div>
 
     <!-- EXTRA -->
     <script src="./static/ngl/examples/js/examples.js"></script>
