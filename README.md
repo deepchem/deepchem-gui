@@ -2,7 +2,7 @@
 
 This library implements a web based GUI to [DeepChem](https://github.com/deepchem/deepchem).
 As of present, it can be used to predict docking of ligands to proteins using DeepChem models pretrained on [PDBBind](http://www.pdbbind-cn.org/).
-The GUI heavily relies on the molecular visualization library [NGL](https://github.com/arose/ngl), and is modeled after its [demo web application](http://proteinformatics.charite.de/ngl/html/ngl.html).
+The GUI heavily relies on the molecular visualization library [NGL](https://github.com/arose/ngl) and the Chemoinformatics library [Kekule.js](http://partridgejiang.github.io/Kekule.js/).
 
 ### Table of contents:
 
@@ -50,11 +50,9 @@ Installation from source is the only currently supported format.
    This should open your default browser and launch the application at
    http://127.0.0.1:5000/. Use the `-h` flag to reveal a full list of options.
 
-1. Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb
-
-1. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein.
-
-1. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations).
+1. Docking: Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations).
+1. Molecule editing: Clicking on the "Molecule Editor" option opens a [Kekule.js](http://partridgejiang.github.io/Kekule.js/) molecule editor. Instructions to use the editor are available [here](http://partridgejiang.github.io/Kekule.js/documents/tutorial/content/composer.html).
+1. Reaction visualization: Visualize SMILES strings and Reaction SMARTS stored in a CSV format using the respective tabs under "Visualize".
 
 Note: This repository is under active development so bugs and surprises are likely. Kindly raise an issue on GitHub if you run into problems and we will try and resolve it asap. Alternatively you can also contribute to the repository by following [these guidelines](https://github.com/deepchem/deepchem#contributing-to-deepchem). Client side issues can be inspected using the JavaScript console of the browser while server side errors will be displayed in the shell.
 

@@ -637,6 +637,7 @@ UI.VirtualList = function( items, itemHeight, height, generatorFn ){
     list.style.width = '100%';
     list.style.height = height + 'px';
     list.style[ "overflow-y" ] = 'auto';
+    list.style["overflow-x"] = 'auto';
     list.style.position = 'relative';
     list.style.padding = 0;
 
@@ -795,6 +796,7 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
         .setWidth( "100%" );
 
     var fullWidth = 0;
+    // var fullWidth = p.fullWidth
 
     var selected = [];
 
@@ -839,7 +841,7 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
         var width = col.width || defaultWidth;
         var margin = col.margin || defaultMargin;
 
-        var text = new UI.EllipsisText()
+        var text = new UI.Text()
             .setValue( col.name )
             .setWidth( width + "px" )
             .setTextAlign( col.align || defaultAlign )
@@ -854,12 +856,22 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
                 }else{
                     col.__sortFlag = "ASC";
                 }
-            } );
+            } )
+            .setFontWeight("bold");
         header.add( text );
 
         fullWidth += width + 2 * margin;
 
     } );
+
+    // Get the modal
+    var modal = document.getElementById('myModal');
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
 
     // list
 
@@ -879,7 +891,7 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
             if( typeof value === "object" ){
                 element = value;
             }else{
-                element = new UI.Text()
+                element = new UI.EllipsisText()
                     .setValue( value );
             }
 
@@ -889,6 +901,16 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
                 .setMarginLeft( margin + "px" )
                 .setMarginRight( margin + "px" )
                 .onClick( function( event ){
+                    console.log("Clicking" + index + " " + col.index)
+                    // Get the image and insert it inside the modal - use its "alt" text as a caption
+                    var modalImg = document.getElementById("modal_img");
+                    var captionText = document.getElementById("modal_caption");
+                    modal.style.display = "block";
+                    if( typeof value === "object" ){
+                        captionText.innerHTML = value.dom.innerHTML
+                    }else{
+                        captionText.innerHTML = value;
+                    }
                     if( typeof col.onClick === "function" ){
                         col.onClick( event, index, value );
                     }
@@ -902,7 +924,10 @@ UI.VirtualTable = function( items, itemHeight, height, columns, params ){
                     if( typeof col.onMouseOut === "function" ){
                         col.onMouseOut( event, index, value );
                     }
-                } );
+                } )
+                .setCursor("pointer")
+                .setOverflowX("auto")
+                .setTextOverflow("")
 
             panel.add( element );
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChemEditor in IFrame</title>
+    <style>
+        body
+        {
+            background-color: white;
+        }
+        iframe
+        {
+            display: block;
+            width: 100%;
+            height: 600px;
+            border: 1px solid dotted;
+            background: yellow;
+        }
+    </style>
+    <script>
+        /*
+        // create a time cosuming job to delay loading
+        var tick1 = Date.now();
+        var tick2 = tick1;
+        while (tick2 - tick1 < 4000)  // delay for two seconds
+            tick2 = Date.now();
+        */
+        function showStage()
+        {
+            var elem = document.getElementById('stage');
+            elem.style.display = 'block';
+        }
+    </script>
+</head>
+<body onpageshow="console.log('page show')">
+    <button id="btnShowStage" onclick="showStage()">Show Stage</button>
+    <div id="stage" style="display:none">
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="about:blank"></iframe>
+        <!--
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="chemEditorUiTest.html"></iframe>
+        <iframe src="chemEditorUiTest.html"></iframe>
+        -->
+    </div>
+</body>
+</html>

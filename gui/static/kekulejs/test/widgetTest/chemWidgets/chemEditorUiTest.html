@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chem Editor UI Test</title>
+  <script src="../../_libs/raphael-min.2.0.1.js"></script>
+
+  <script src="../../../src/kekule.js?min=false&locals=en,zh&language=zh"></script>
+
+
+  <!--
+	<script src="../../../src/_compressed/kekule.compressed.js"></script>
+	-->
+  <link rel="stylesheet" type="text/css" href="../../../src/widgets/themes/default/kekule.css" />
+  <!--
+  <link rel="stylesheet" type="text/css" href="../../../src/widgets/themes/default/release/default.css" />
+  <link rel="stylesheet" type="text/css" href="../../../src/widgets/themes/default/release/defaultColor.css" />
+  <link rel="stylesheet" type="text/css" href="../../../src/widgets/themes/default/release/chemWidget.css" />
+  <link rel="stylesheet" type="text/css" href="../../../src/widgets/themes/default/release/chemWidgetColor.css" />
+  -->
+
+  <script>
+    var chemEditor;
+    var chemEditorUi;
+    var operHistoryView;
+    function init()
+    {
+      var elem = document.getElementById('chemEditorUi');
+      chemEditor = new Kekule.Editor.ChemSpaceEditor(document, null, Kekule.Render.RendererType.R2D);
+      //chemEditor.setEnableOperContext(false);
+      chemEditorUi = new Kekule.Editor.Composer(elem, chemEditor);
+      var toolButtons = chemEditorUi.getDefaultCommonToolBarButtons();
+      toolButtons.push({'text': 'View Obj', 'showText': true, '#execute': openObjInViewer});
+      toolButtons.push({'text': 'View Doc', 'showText': true, '#execute': openDocInViewer});
+      toolButtons.push({'widget': 'Kekule.Widget.CheckButton', 'text': 'Custom CheckButton'});
+      chemEditorUi.setCommonToolButtons(toolButtons);
+
+      // debug
+			/*
+			chemEditorUi.setEnableCreateNewDoc(false);
+			chemEditorUi.setEnableLoadNewFile(false);
+			chemEditorUi.setAllowCreateNewChild(false);
+
+			chemEditorUi.setChemObj(new Kekule.Molecule(null, null, true));
+			*/
+
+
+      /*
+      Kekule.X.Event.addListener(document.body, 'mousedown', function(e) {
+        console.log('-----------------');
+        console.log(e.getTarget().tagName);
+        console.log(e.getCurrentTarget().tagName);
+        console.log('-----------------');
+      });
+      */
+
+      var elem = document.getElementById('operHis');
+      operHistoryView = new Kekule.Widget.OperHistoryTreeView(elem, chemEditor.getOperHistory());
+      operHistoryView.setItemInitialExpanded(true);
+    }
+
+    function openObjInViewer()
+    {
+      var chemObj = chemEditor.getSavingTargetObj();
+      if (chemObj)
+      {
+        var viewer = Kekule.Widget.getWidgetById('chemViewer');
+        viewer.setAutoSize(true).setChemObj(chemObj);
+      }
+    }
+    function openDocInViewer()
+    {
+      var chemObj = chemEditor.getChemObj();
+      if (chemObj)
+      {
+        var viewer = Kekule.Widget.getWidgetById('chemViewer');
+        viewer.setAutoSize(true).setChemObj(chemObj);
+      }
+    }
+  </script>
+</head>
+<body onload="init()" onpageshow="console.log('chem editor page show');">
+  <div id="chemEditorUi" style="width:800px;height:600px" data-resizable="true"></div>
+  <div id="operHis" style="width:400px;height:600px;float:right"></div>
+  <div id="chemViewer" style="border: 1px solid #ccc;float:right" data-widget="Kekule.ChemWidget.Viewer2D"></div>
+</body>
+</html>

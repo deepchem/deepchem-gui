@@ -1,0 +1,28 @@
+{
+  "name": "firemol",
+  "title": "FireMol",
+  "id": "firemol@kekule",
+  "description": "An addon based on Kekule.js, enables user to open/edit molecule and insert it to HTML pages, especially web editors.",
+  "author": "Partridge Jiang",
+  "license": "MPL 2.0",
+  "version": "0.5",
+  "homepage": "http://partridgejiang.github.io/Kekule.js/",
+  "icon": "./data/icons/addonLogo.png",
+  "permissions": {"private-browsing": true},
+
+  "preferences": [{
+      "name": "importPanelMinWidth",
+      "title": "Molecule Import Panel min width",
+      "description": "Min width of Molecule Import Panel",
+      "type": "integer",
+      "value": 600
+    },
+    {
+      "name": "importPanelMinHeight",
+      "title": "Molecule Import Panel min height",
+      "description": "Min height of Molecule Import Panel",
+      "type": "integer",
+      "value": 500
+    }
+  ]
+}
