@@ -44,7 +44,8 @@ Installation from source is the only currently supported format.
 ## Usage
 
 1. Ensure that the Anaconda environment is activated, e.g.:
-    ```source activate deepchem
+    ```base
+    source activate deepchem
     ```
 1. In the Anaconda environment with `deepchem-gui` installed, execute:
     ```bash
@@ -53,9 +54,12 @@ Installation from source is the only currently supported format.
    This should open your default browser and launch the application at
    http://127.0.0.1:5000/. Use the `-h` flag to reveal a full list of options.
 
-    Note that if you have installed the software on a remote server, you may wish to open an SSH tunnel to port 5000. This can be done via the -L flag, e.g. ssh -L 5000:localhost:5000 user@servername
+    Note that if you have installed the software on a remote server, you may wish to open an SSH tunnel to port 5000. This can be done via the -L flag, e.g. 
+   ```bash
+   ssh -L 5000:localhost:5000 user@servername
+   ```
 
-1. Docking: Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations). An example protein that you may wish to try docking is 14HR.pdb, which is encoded by NF2 tumor suppressor gene. You can download such a PDB file from a PDB database query, e.g., via a query such as to: http://www.ebi.ac.uk/pdbe/entry/search/index?all_molecule_names:Merlin
+1. Docking: Select ligand files and protein files using the file selection tool in Dock tab. At present, the only supported format for ligand files is .sdf and for protein files is .pdb. Docking takes approx. 5 minutes, following which the predicted scores are tabulated in the browser for all possible ligand and protein pairs. Clicking on a row loads the structures of the corresponding ligand and protein. Update the molecular visualizations using the options in the right panel as specified in [these instructions](http://proteinformatics.charite.de/ngl/doc/index.html#User_manual/Usage/Molecular_representations). An example protein that you may wish to try docking is 14HR.pdb, which is encoded by NF2 tumor suppressor gene. You can download such a PDB file from a PDB database query, e.g., via a query [to EMBL EBI](http://www.ebi.ac.uk/pdbe/entry/search/index?all_molecule_names:Merlin)
 1. Molecule editing: Clicking on the "Molecule Editor" option opens a [Kekule.js](http://partridgejiang.github.io/Kekule.js/) molecule editor. Instructions to use the editor are available [here](http://partridgejiang.github.io/Kekule.js/documents/tutorial/content/composer.html).
 1. Reaction visualization: Visualize SMILES strings and Reaction SMARTS stored in a CSV format using the respective tabs under "Visualize".
 
