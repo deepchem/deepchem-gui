@@ -218,7 +218,7 @@ def dock(protein_fns, ligand_fns):
             ligand_fn = ligand_fns[j]
 
             print("Docking: %s to %s" % (ligand_fn, protein_fn))
-            docker = dc.dock.VinaGridRFDocker(
+            docker = dc.dock.VinaGridDNNDocker(
                 exhaustiveness=1, detect_pockets=False)
             (score, (protein_docked, ligand_docked)
              ) = docker.dock(protein_fn, ligand_fn)
