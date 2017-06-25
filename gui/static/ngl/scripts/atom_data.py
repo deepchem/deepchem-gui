@@ -14,7 +14,7 @@ def main( argv=None ):
     with open( "data/element.txt", "rb" ) as fp:
         for line in fp:
             if line.startswith("#num"):
-                print line
+                print(line)
             elif line.startswith("#"):
                 continue
             else:
@@ -23,8 +23,8 @@ def main( argv=None ):
                 vdw_radii[ element ] = float( row[ 5 ] )
                 covalent_radii[ element ] = float( row[ 3 ] )
 
-    print json.dumps( vdw_radii )
-    print json.dumps( covalent_radii )
+    print(json.dumps( vdw_radii ))
+    print(json.dumps( covalent_radii ))
 
 
 
