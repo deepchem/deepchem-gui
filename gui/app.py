@@ -20,7 +20,7 @@ DEEPCHEM_GUI = Flask('deepchem-gui', static_folder=STATIC_DIR,
 UPLOAD_DIR = os.path.join(STATIC_DIR, "data/")
 if not os.path.isdir(UPLOAD_DIR):
     os.mkdir(UPLOAD_DIR)
-    print "Created data directory"
+    print("Created data directory")
 
 # serve ngl webapp clone
 @DEEPCHEM_GUI.route('/')
@@ -144,7 +144,7 @@ def render_smiles(data):
 
             data[i].append(url_for('static', filename='data/' + smiles_fn))
         except Exception as e:
-            print e
+            print(e)
             data[i].append("Invalid")
             pass
     return data
@@ -198,7 +198,7 @@ def render_smarts(data):
             data[i].append(url_for('static', filename='data/' + smiles_2_fn))
 
         except Exception as e:
-            print e
+            print(e)
             data[i].append("Invalid")
             data[i].append("Invalid")
             data[i].append("Invalid")
