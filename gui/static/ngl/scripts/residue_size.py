@@ -16,7 +16,7 @@ def main( argv=None ):
             res = row[ 0 ].upper()
             res_radii[ res ] = round( float( row[ 1 ] ), 2 )
 
-    print json.dumps( res_radii )
+    print(json.dumps( res_radii ))
 
 
 
