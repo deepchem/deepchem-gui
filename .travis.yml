@@ -1,0 +1,7 @@
+language: python
+python:
+- '3.5'
+install:
+- pip3 install yapf
+script: bash tests/check_formatting.sh
+
