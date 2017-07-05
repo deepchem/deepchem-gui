@@ -11,9 +11,7 @@ setup(
     version=VERSION,
     packages=find_packages(),
     include_package_data=True,
-    package_data={
-        'deepchem-gui': ['static/deepchem-gui/*', 'static/ngl/*']
-    },
+    package_data={'deepchem-gui': ['static/deepchem-gui/*', 'static/ngl/*']},
     entry_points={
         'console_scripts': [
             'deepchem-gui = gui.cli.main:main',
@@ -23,5 +21,4 @@ setup(
     author="Prasad Kawthekar",
     author_email="pkawthek@stanford.edu",
     description="DeepChem GUI",
-    license="GPL-3.0",
-)
+    license="GPL-3.0",)
